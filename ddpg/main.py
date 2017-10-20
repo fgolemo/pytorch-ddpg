@@ -13,7 +13,7 @@ from ddpg.evaluator import Evaluator
 
 gym.undo_logger_setup()
 
-def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, max_episode_length=None, debug=False):
+def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, max_episode_length=None, debug=False, exp=None):
 
     agent.is_training = True
     step = episode = episode_steps = 0
@@ -46,6 +46,8 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
         if evaluate is not None and validate_steps > 0 and step % validate_steps == 0:
             policy = lambda x: agent.select_action(x, decay_epsilon=False)
             validate_reward = evaluate(env, policy, debug=False, visualize=False)
+            if exp is not None:
+                exp.metric("avg reward", validate_reward)
             if debug: prYellow('[Evaluate] Step_{:07d}: mean_reward:{}'.format(step, validate_reward))
 
         # [optional] save intermideate model
