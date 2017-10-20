@@ -147,6 +147,7 @@ class DDPG(object):
         self.critic.load_state_dict(
             torch.load('{}/critic.pkl'.format(output))
         )
+        # print("DBG: loaded both models")
 
 
     def save_model(self,output):
