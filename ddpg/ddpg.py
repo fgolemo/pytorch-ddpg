@@ -1,16 +1,15 @@
 
 import numpy as np
-
 import torch
 import torch.nn as nn
 from torch.optim import Adam
 
-from model import (Actor, Critic)
-from memory import SequentialMemory
-from random_process import OrnsteinUhlenbeckProcess
-from util import *
+from ddpg.memory import SequentialMemory
 
 # from ipdb import set_trace as debug
+from ddpg.model import Actor, Critic
+from ddpg.random_process import OrnsteinUhlenbeckProcess
+from ddpg.util import *
 
 criterion = nn.MSELoss()
 

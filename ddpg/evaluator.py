@@ -1,9 +1,10 @@
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.io import savemat
 
-from util import *
+from ddpg.util import *
+
 
 class Evaluator(object):
 
