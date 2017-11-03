@@ -139,15 +139,19 @@ class DDPG(object):
         self.s_t = obs
         self.random_process.reset_states()
 
-    def load_weights(self, output):
+    def load_weights(self, output, load_best=False):
         if output is None: return
 
+        best_prefix = ""
+        if load_best:
+            best_prefix = "_best"
+
         self.actor.load_state_dict(
-            torch.load('{}/actor_best.pkl'.format(output), map_location=lambda storage, loc: storage)
+            torch.load('{}/actor{}.pkl'.format(output, best_prefix), map_location=lambda storage, loc: storage)
         )
 
         self.critic.load_state_dict(
-            torch.load('{}/critic_best.pkl'.format(output), map_location=lambda storage, loc: storage)
+            torch.load('{}/critic{}.pkl'.format(output, best_prefix), map_location=lambda storage, loc: storage)
         )
         # print("DBG: loaded both models")
 

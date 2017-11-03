@@ -13,8 +13,9 @@ from ddpg.evaluator import Evaluator
 
 gym.undo_logger_setup()
 
-def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, max_episode_length=None, debug=False, exp=None):
 
+def train(args, num_iterations, agent, env, evaluate, validate_steps, output, max_episode_length=None, debug=False,
+          exp=None):
     agent.is_training = True
     step = episode = episode_steps = 0
     episode_reward = 0.
@@ -31,18 +32,18 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
             action = agent.random_action()
         else:
             action = agent.select_action(observation)
-        
+
         # env response with next_observation, reward, terminate_info
         observation2, reward, done, info = env.step(action)
         observation2 = deepcopy(observation2)
-        if max_episode_length and episode_steps >= max_episode_length -1:
+        if max_episode_length and episode_steps >= max_episode_length - 1:
             done = True
 
         # agent observe and update policy
         agent.observe(reward, observation2, done)
-        if step > args.warmup :
+        if step > args.warmup:
             agent.update_policy()
-        
+
         # [optional] evaluate
         if evaluate is not None and validate_steps > 0 and step % validate_steps == 0:
             policy = lambda x: agent.select_action(x, decay_epsilon=False)
@@ -59,7 +60,7 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
             evaluations.append(validate_reward)
 
         # [optional] save intermideate model
-        if step % int(num_iterations/3) == 0:
+        if step % int(num_iterations / 3) == 0:
             agent.save_model(output, is_best=False)
 
         # update 
@@ -68,8 +69,8 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
         episode_reward += reward
         observation = deepcopy(observation2)
 
-        if done: # end of episode
-            if debug: prGreen('#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step))
+        if done:  # end of episode
+            if debug: prGreen('#{}: episode_reward:{} steps:{}'.format(episode, episode_reward, step))
 
             agent.memory.append(
                 observation,
@@ -83,9 +84,9 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
             episode_reward = 0.
             episode += 1
 
-def test(num_episodes, agent, env, evaluate, model_path, visualize=True, debug=False):
 
-    agent.load_weights(model_path)
+def test(num_episodes, agent, env, evaluate, model_path, visualize=True, debug=False, load_best=False):
+    agent.load_weights(model_path, load_best=load_best)
     agent.is_training = False
     agent.eval()
     policy = lambda x: agent.select_action(x, decay_epsilon=False)
@@ -98,7 +99,6 @@ def test(num_episodes, agent, env, evaluate, model_path, visualize=True, debug=F
             eval_file.write("{}\n".format(validate_reward))
             eval_file.flush()
     eval_file.close()
-
 
 # if __name__ == "__main__":
 #
