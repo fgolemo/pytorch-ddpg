@@ -157,11 +157,11 @@ class DDPG(object):
             best_prefix = "_best"
         torch.save(
             self.actor.state_dict(),
-            '{}/actor{}.pkl'.format(output)
+            '{}/actor{}.pkl'.format(output, best_prefix)
         )
         torch.save(
             self.critic.state_dict(),
-            '{}/critic{}.pkl'.format(output)
+            '{}/critic{}.pkl'.format(output, best_prefix)
         )
 
     def seed(self, s):
