@@ -69,4 +69,4 @@ class Evaluator(object):
         plt.ylabel('Average Reward')
         ax.errorbar(x, y, yerr=error, fmt='-o')
         plt.savefig(fn+'.png')
-        savemat(fn+'.mat', {'reward':self.results})
+        savemat(fn+'.mat', {'reward':self.results, 'interval': self.interval})
