@@ -141,11 +141,11 @@ class DDPG(object):
         if output is None: return
 
         self.actor.load_state_dict(
-            torch.load('{}/actor.pkl'.format(output))
+            torch.load('{}/actor.pkl'.format(output), map_location=lambda storage, loc: storage)
         )
 
         self.critic.load_state_dict(
-            torch.load('{}/critic.pkl'.format(output))
+            torch.load('{}/critic.pkl'.format(output), map_location=lambda storage, loc: storage)
         )
         # print("DBG: loaded both models")
 

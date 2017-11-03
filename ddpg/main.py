@@ -82,9 +82,14 @@ def test(num_episodes, agent, env, evaluate, model_path, visualize=True, debug=F
     agent.eval()
     policy = lambda x: agent.select_action(x, decay_epsilon=False)
 
+    eval_file = open("eval.log", "w")
     for i in range(num_episodes):
         validate_reward = evaluate(env, policy, debug=debug, visualize=visualize, save=False)
-        if debug: prYellow('[Evaluate] #{}: mean_reward:{}'.format(i, validate_reward))
+        if debug:
+            prYellow('[Evaluate] #{}: mean_reward:{}'.format(i, validate_reward))
+            eval_file.write("{}\n".format(validate_reward))
+            eval_file.flush()
+    eval_file.close()
 
 
 # if __name__ == "__main__":
