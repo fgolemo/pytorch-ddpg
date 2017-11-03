@@ -142,9 +142,12 @@ class DDPG(object):
     def load_weights(self, output, load_best=False):
         if output is None: return
 
-        best_prefix = ""
         if load_best:
             best_prefix = "_best"
+            print("DBG: LOADING BEST MODEL")
+        else:
+            best_prefix = ""
+            print("DBG: LOADING LAST MODEL, NOT BEST")
 
         self.actor.load_state_dict(
             torch.load('{}/actor{}.pkl'.format(output, best_prefix), map_location=lambda storage, loc: storage)
