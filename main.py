@@ -45,7 +45,7 @@ if __name__ == "__main__":
     # parser.add_argument('--cuda', dest='cuda', action='store_true') # TODO
 
     args = parser.parse_args()
-    args.output = get_output_folder(args.output, args.env)
+    args.output = get_output_folder(args.output, args.env, args.resume)
     if args.resume == 'default':
         args.resume = 'output/{}-run0'.format(args.env)
 
