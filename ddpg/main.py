@@ -19,6 +19,7 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
     step = episode = episode_steps = 0
     episode_reward = 0.
     observation = None
+    evaluations = []
     while step < num_iterations:
         # reset if it is the start of episode
         if observation is None:
@@ -46,13 +47,20 @@ def train(args, num_iterations, agent, env,  evaluate, validate_steps, output, m
         if evaluate is not None and validate_steps > 0 and step % validate_steps == 0:
             policy = lambda x: agent.select_action(x, decay_epsilon=False)
             validate_reward = evaluate(env, policy, debug=False, visualize=False)
+
             if exp is not None:
                 exp.metric("avg reward", validate_reward)
             if debug: prYellow('[Evaluate] Step_{:07d}: mean_reward:{}'.format(step, validate_reward))
 
+            if len(evaluations) == 0 or validate_reward > max(evaluations):
+                agent.save_model(output, is_best=True)
+                if exp is not None:
+                    exp.metric("max reward", validate_reward)
+            evaluations.append(validate_reward)
+
         # [optional] save intermideate model
         if step % int(num_iterations/3) == 0:
-            agent.save_model(output)
+            agent.save_model(output, is_best=False)
 
         # update 
         step += 1
